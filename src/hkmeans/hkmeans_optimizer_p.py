@@ -1,7 +1,7 @@
-# © Copyright IBM Corporation 2022.
 #
-# LICENSE: Apache License 2.0 (Apache-2.0)
-# http://www.apache.org/licenses/LICENSE-2.0
+# Copyright 2020- IBM Inc. All rights reserved
+# SPDX-License-Identifier: Apache2.0
+#
 
 import numpy as np
 from scipy.sparse import issparse

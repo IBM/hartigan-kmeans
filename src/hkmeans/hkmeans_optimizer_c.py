@@ -1,7 +1,7 @@
-# © Copyright IBM Corporation 2022.
 #
-# LICENSE: Apache License 2.0 (Apache-2.0)
-# http://www.apache.org/licenses/LICENSE-2.0
+# Copyright 2020- IBM Inc. All rights reserved
+# SPDX-License-Identifier: Apache2.0
+#
 
 from scipy.sparse import issparse
 from hkmeans.c_package.c_hkmeans_optimizer import CHKMeansOptimizer as CHKMeansOptimizerExtension

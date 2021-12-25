@@ -93,8 +93,8 @@ If you would like to see the detailed LICENSE click [here](LICENSE).
 
 ## Authors 
 - Algorithm: [Hartigan 1975](#references)
-- Pseudo-code and Optimization: [Slonim, Aharoni and Crammer (2013)](#references)
-- Programming, Optimization and Maintenance: [Assaf Toledo](https://github.com/assaftibm)
+- Pseudo-code and optimization: [Slonim, Aharoni and Crammer (2013)](#references)
+- Programming, optimization and maintenance: [Assaf Toledo](https://github.com/assaftibm)
 
 
 <!-- Questions can be useful but optional, this gives you a place to say, "This is how to contact this project maintainers or create PRs -->

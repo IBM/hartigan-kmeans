@@ -21,8 +21,8 @@ elif platform.system() == "Linux":
     compile_extra_args = ["-O3"]
     link_extra_args = ["-O3"]
 elif platform.system() == "Darwin":
-    compile_extra_args = ["-O3", "-std=c++11", "-macosx-version-min=10.9"]
-    link_extra_args = ["-O3", "-stdlib=libc++", "-macosx-version-min=10.9"]
+    compile_extra_args = ["-O3", "-std=c++11", "-mmacosx-version-min=10.9"]
+    link_extra_args = ["-O3", "-stdlib=libc++", "-mmacosx-version-min=10.9"]
 else:
     raise ValueError("Unsupported platform: %s" % platform.system())
 

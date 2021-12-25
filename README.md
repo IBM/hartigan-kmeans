@@ -9,7 +9,7 @@
 <!-- Not always needed, but a scope helps the user understand in a short sentence like below, why this repo exists -->
 ## Scope
 
-This project provides an efficient implementation of Hartigan’s method for k-means clustering ([Hartigan 1975](#references)). It builds on the work of [Slonim, Aharoni and Crammer (2013)](#references). The project is packaged as a python library with a cython-wrapped C++ extension for the partition optimization code. A pure python implementation is included as well.
+This project provides an efficient implementation of Hartigan’s method for k-means clustering ([Hartigan 1975](#references)). It builds on the work of [Slonim, Aharoni and Crammer (2013)](#references), which introduced a significant improvement to the algorithm complexity, and adds an additional optimization for the use case of clustering sparse vector representation. The project is packaged as a python library with a cython-wrapped C++ extension for the partition optimization code. A pure python implementation is included as well.
 
 
 ## Installation
@@ -93,17 +93,16 @@ If you would like to see the detailed LICENSE click [here](LICENSE).
 
 ## Authors 
 - Algorithm: [Hartigan 1975](#references)
-- Pseudo-code: [Slonim, Aharoni and Crammer (2013)](#references)
-- Programming and Maintenance: [Assaf Toledo](https://github.com/assaftibm)
+- Pseudo-code and Optimization: [Slonim, Aharoni and Crammer (2013)](#references)
+- Programming, Optimization and Maintenance: [Assaf Toledo](https://github.com/assaftibm)
 
 
 <!-- Questions can be useful but optional, this gives you a place to say, "This is how to contact this project maintainers or create PRs -->
 If you have any questions or issues you can create a new [issue here][issues].
 
 ## References
-- J. A. Hartigan. Clustering algorithms. Wiley series in probability and mathematical statistics: Applied probability and statistics. Wiley, 1975.
-- N. Slonim, N. Friedman, and N. Tishby (2002). Unsupervised Document Classification using Sequential Information Maximization. SIGIR 2002.
-https://dl.acm.org/doi/abs/10.1145/564376.564401
+- Hartigan, John A. Clustering algorithms. Wiley series in probability and mathematical statistics: Applied probability and statistics. John Wiley & Sons, Inc., 1975.
+- Slonim, Noam, Ehud Aharoni, and Koby Crammer. "Hartigan's K-Means Versus Lloyd's K-Means—Is It Time for a Change?." Twenty-Third International Joint Conference on Artificial Intelligence. 2013.
 
 
 [issues]: https://github.com/IBM/sib/issues/new

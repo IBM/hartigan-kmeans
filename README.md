@@ -4,12 +4,12 @@
 
 <!-- Build Status, is a great thing to have at the top of your repository, it shows that you take your CI/CD as first class citizens -->
 <!-- [![Build Status](https://travis-ci.org/jjasghar/ibm-cloud-cli.svg?branch=master)](https://travis-ci.org/jjasghar/ibm-cloud-cli) -->
-[![GitHub Actions CI status](https://github.com/ibm/sib/workflows/Build/badge.svg)](https://github.com/ibm/sib/actions)
+[![GitHub Actions CI status](https://github.com/ibm/hartigan-kmeans/workflows/Build/badge.svg)](https://github.com/ibm/hartigan-kmeans/actions)
 
 <!-- Not always needed, but a scope helps the user understand in a short sentence like below, why this repo exists -->
 ## Scope
 
-This project provides an efficient implementation of Hartigan’s method for k-means clustering ([Hartigan 1975](#references)). It builds on the work of [Slonim, Aharoni and Crammer (2013)](#references), which introduced a significant improvement to the algorithm complexity, and adds an additional optimization for the use case of clustering sparse vector representation. The project is packaged as a python library with a cython-wrapped C++ extension for the partition optimization code. A pure python implementation is included as well.
+This project provides an efficient implementation of Hartigan’s method for k-means clustering ([Hartigan 1975](#references)). It builds on the work of [Slonim, Aharoni and Crammer (2013)](#references), which introduced a significant improvement to the algorithm computational complexity, and adds an additional optimization for inputs in sparse vector representation. The project is packaged as a python library with a cython-wrapped C++ extension for the partition optimization code. A pure python implementation is included as well.
 
 
 ## Installation

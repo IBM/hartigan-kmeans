@@ -1,77 +1,110 @@
 <!-- This should be the location of the title of the repository, normally the short name -->
-# repo-template
+# Hartigan's K-Means
+
 
 <!-- Build Status, is a great thing to have at the top of your repository, it shows that you take your CI/CD as first class citizens -->
 <!-- [![Build Status](https://travis-ci.org/jjasghar/ibm-cloud-cli.svg?branch=master)](https://travis-ci.org/jjasghar/ibm-cloud-cli) -->
+[![GitHub Actions CI status](https://github.com/ibm/sib/workflows/Build/badge.svg)](https://github.com/ibm/sib/actions)
 
-<!-- Not always needed, but a scope helps the user understand in a short sentance like below, why this repo exists -->
+<!-- Not always needed, but a scope helps the user understand in a short sentence like below, why this repo exists -->
 ## Scope
 
-The purpose of this project is to provide a template for new open source repositories.
+This project provides an efficient implementation of Hartigan’s method for k-means clustering ([Hartigan 1975](#references)). It builds on the work of [Slonim, Aharoni and Crammer (2013)](#references). The project is packaged as a python library with a cython-wrapped C++ extension for the partition optimization code. A pure python implementation is included as well.
 
-<!-- A more detailed Usage or detailed explaination of the repository here -->
+
+## Installation
+
+```pip install hartigan-kmeans```
+
+
+<!-- A more detailed Usage or detailed explanation of the repository here -->
 ## Usage
+The main class in this library is `HKmeans`, which implements the clustering interface of [SciKit Learn][sklearn], providing methods such as `fit()`, `fit_transform()`, `fit_predict()`, etc. 
 
-This repository contains some example best practices for open source repositories:
+The sample code below clusters the 18.8K documents of the 20-News-Groups dataset into 20 clusters:
 
-* [LICENSE](LICENSE)
-* [README.md](README.md)
-* [CONTRIBUTING.md](CONTRIBUTING.md)
-* [MAINTAINERS.md](MAINTAINERS.md)
-<!-- A Changelog allows you to track major changes and things that happen, https://github.com/github-changelog-generator/github-changelog-generator can help automate the process -->
-* [CHANGELOG.md](CHANGELOG.md)
+```python
 
-> These are optional
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.datasets import fetch_20newsgroups
+from sklearn import metrics
+from hkmeans import HKmeans
 
-<!-- The following are OPTIONAL, but strongly suggested to have in your repository. -->
-* [dco.yml](.github/dco.yml) - This enables DCO bot for you, please take a look https://github.com/probot/dco for more details.
-* [travis.yml](.travis.yml) - This is a example `.travis.yml`, please take a look https://docs.travis-ci.com/user/tutorial/ for more details.
+# read the dataset
+dataset = fetch_20newsgroups(subset='all', categories=None,
+                             shuffle=True, random_state=256)
 
-These may be copied into a new or existing project to make it easier for developers not on a project team to collaborate.
+gold_labels = dataset.target
+n_clusters = np.unique(gold_labels).shape[0]
 
-<!-- A notes section is useful for anything that isn't covered in the Usage or Scope. Like what we have below. -->
-## Notes
+# create count vectors using the 10K most frequent words
+vectorizer = TfidfVectorizer(max_features=10000)
+X = vectorizer.fit_transform(dataset.data)
 
-**NOTE: While this boilerplate project uses the Apache 2.0 license, when
-establishing a new repo using this template, please use the
-license that was approved for your project.**
+# HKMeans initialization and clustering; parameters:
+# perform 10 random initializations (n_init=10); the best one is returned.
+# up to 15 optimization iterations in each initialization (max_iter=15)
+# use all cores in the running machine for parallel execution (n_jobs=-1)
+hkmeans = HKMeans(n_clusters=n_clusters, random_state=128, n_init=10,
+                  n_jobs=-1, max_iter=15, verbose=True)
+hkmeans.fit(X)
 
-**NOTE: This repository has been configured with the [DCO bot](https://github.com/probot/dco).
-When you set up a new repository that uses the Apache license, you should
-use the DCO to manage contributions. The DCO bot will help enforce that.
-Please contact one of the IBM GH Org stewards.**
+# report standard clustering metrics
+print("Homogeneity: %0.3f" % metrics.homogeneity_score(gold_labels, hkmeans.labels_))
+print("Completeness: %0.3f" % metrics.completeness_score(gold_labels, hkmeans.labels_))
+print("V-measure: %0.3f" % metrics.v_measure_score(gold_labels, hkmeans.labels_))
+print("Adjusted Rand-Index: %.3f" % metrics.adjusted_rand_score(gold_labels, hkmeans.labels_))
+```
+
+Expected result:
+```
+Homogeneity: 
+Completeness:
+V-measure:
+Adjusted Rand-Index:
+```
+
+See the [Examples](examples) directory for more illustrations and a comparison against Lloyd's K-Means.
+
+
+<!-- License and Authors is optional here, but gives you the ability to highlight who is involed in the project -->
+## License
+
+```text
+Copyright IBM Corporation 2022
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+```
+
+If you would like to see the detailed LICENSE click [here](LICENSE).
+
+
+## Authors 
+- Algorithm: [Hartigan 1975](#references)
+- Pseudo-code: [Slonim, Aharoni and Crammer (2013)](#references)
+- Programming and Maintenance: [Assaf Toledo](https://github.com/assaftibm)
+
 
 <!-- Questions can be useful but optional, this gives you a place to say, "This is how to contact this project maintainers or create PRs -->
 If you have any questions or issues you can create a new [issue here][issues].
 
-Pull requests are very welcome! Make sure your patches are well tested.
-Ideally create a topic branch for every separate change you make. For
-example:
+## References
+- J. A. Hartigan. Clustering algorithms. Wiley series in probability and mathematical statistics: Applied probability and statistics. Wiley, 1975.
+- N. Slonim, N. Friedman, and N. Tishby (2002). Unsupervised Document Classification using Sequential Information Maximization. SIGIR 2002.
+https://dl.acm.org/doi/abs/10.1145/564376.564401
 
-1. Fork the repo
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
 
-## License
-
-All source files must include a Copyright and License header. The SPDX license header is 
-preferred because it can be easily scanned.
-
-If you would like to see the detailed LICENSE click [here](LICENSE).
-
-```text
-#
-# Copyright 2020- IBM Inc. All rights reserved
-# SPDX-License-Identifier: Apache2.0
-#
-```
-## Authors
-
-Optionally, you may include a list of authors, though this is redundant with the built-in
-GitHub list of contributors.
-
-- Author: New OpenSource IBMer <new-opensource-ibmer@ibm.com>
-
-[issues]: https://github.com/IBM/repo-template/issues/new
+[issues]: https://github.com/IBM/sib/issues/new
+[sklearn]: https://scikit-learn.org

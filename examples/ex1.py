@@ -7,7 +7,7 @@ import os
 from time import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import metrics
-from hkmeans.hkmeans_main import HKMeans
+from hkmeans import HKMeans
 from examples.clustering_utils import fetch_20ng, create_heatmap
 
 

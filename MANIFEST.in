@@ -1,2 +1,6 @@
+include src/hkmeans/c_package/c_hkmeans_optimizer.pyx
+include src/hkmeans/c_package/c_hkmeans_optimizer.pxd
+include src/hkmeans/c_package/hkmeans_optimizer.cpp
+include src/hkmeans/c_package/hkmeans_optimizer.h
 include versioneer.py
 include src/hkmeans/_version.py

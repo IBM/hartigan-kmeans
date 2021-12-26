@@ -4,7 +4,7 @@
 
 <!-- Build Status, is a great thing to have at the top of your repository, it shows that you take your CI/CD as first class citizens -->
 <!-- [![Build Status](https://travis-ci.org/jjasghar/ibm-cloud-cli.svg?branch=master)](https://travis-ci.org/jjasghar/ibm-cloud-cli) -->
-[![Build and upload to PyPI](https://github.com/IBM/hartigan-kmeans/actions/workflows/build.yml/badge.svg)](https://github.com/IBM/hartigan-kmeans/actions/workflows/build.yml)
+[![Build Status](https://github.com/IBM/hartigan-kmeans/actions/workflows/build.yml/badge.svg)](https://github.com/IBM/hartigan-kmeans/actions/workflows/build.yml)
 
 <!-- Not always needed, but a scope helps the user understand in a short sentence like below, why this repo exists -->
 ## Scope
@@ -72,7 +72,7 @@ See the [Examples](examples) directory for more illustrations and a comparison a
 ## License
 
 ```text
-Copyright IBM Corporation 2022
+Copyright IBM Corporation 2021
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -13,7 +13,8 @@
 import hkmeans.c_package  # cython with cpp version
 
 # import core functionality
-from hkmeans import *
+from .hkmeans_main import *
+
 
 from ._version import get_versions
 __version__ = get_versions()['version']

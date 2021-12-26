@@ -33,7 +33,10 @@ class PHKMeansOptimizer:
                 t_centroid_sum[t, :] += self.x[i, :]
 
         np.multiply(t_centroid_sum, (1 / t_size)[:, None], out=t_centroid_avg)
-        t_squared_norm[:] = row_norms(t_centroid_avg, squared=True)
+        if sparse:
+            t_squared_norm[:] = row_norms(t_centroid_avg, squared=True)
+        else:
+            t_squared_norm[:] = 0
 
         # calculate inertia
         inertia = 0

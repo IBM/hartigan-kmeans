@@ -6,16 +6,16 @@
 import os
 from time import time
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
 from sklearn import metrics
+
 from hkmeans import HKMeans
-from examples.clustering_utils import fetch_20ng, create_heatmap
+from clustering_utils import fetch_20ng, save_report_and_heatmap
 
 
-# by default, this test is meant for evaluating the clustering
-# quality and it runs with 4 random initializations. however,
-# if we are interested in evaluating speed, we will use a single
-# initialization.
-speed_test_mode = True
+# This example compares Scikit Learn's Lloyd's K-Means to the Hartigan's K-Means
+# delivered in this distribution. We will use  the 20 News Groups dataset as a
+# benchmark (about 19K docs, 20 clusters).
 
 # step 0 - create an output directory if it does not exist
 output_path = os.path.join("output", "ex1")
@@ -23,55 +23,57 @@ if not os.path.exists(output_path):
     os.makedirs(output_path)
 
 # step 1 - read the dataset
-texts, gold_labels, n_clusters, topics, n_samples = fetch_20ng('all')
+texts, gold_labels_array, n_clusters, topics, n_samples = fetch_20ng('all')
 print("Clustering dataset contains %d texts from %d topics" % (n_samples, n_clusters))
-print()
+
+# The following settings are meant for comparison purposes and should be adjusted
+# based on the real-world use-case.
+# The default for Lloyd's K-Means in sklearn is n_init=10, max_iter=300;
+# For Hartigan's K-Means it is enough to use max_iter=15.
+# Here we use max_iter=15 for both to be able to compare run-time
+# We set kmeans algorithm to 'full' to apply lloyd's k-means
+n_init = 10
+max_iter = 15
+setups = [
+    ("Scikit-Learn Lloyd's K-Means", lambda: KMeans(n_clusters=n_clusters, n_init=n_init,
+                                                    max_iter=max_iter, algorithm='full')),
+    ("Hartigan's K-Means", lambda: HKMeans(n_clusters=n_clusters, n_init=n_init,
+                                           max_iter=max_iter))
+]
 
 # step 2 - represent the clustering data using bow of the 10k most frequent
-# unigrams in the dataset
+# unigrams in the dataset. Note that if you wish to apply some text pre-processing
+# like stop words filtering and stemming/lemmatization - that's the place to do that.
+print("Vectorization starts...", end=' ')
+vectorization_start_t = time()
 vectorizer = TfidfVectorizer(max_features=10000)
 vectors = vectorizer.fit_transform(texts)
-vectors = vectors.toarray()
+vectorization_end_t = time()
+print("ended in %.3f secs." % (vectorization_end_t - vectorization_start_t))
+print("Clustering settings: n_init=%d, max_iter=%d:" % (n_init, max_iter))
+for algorithm_name, factory in setups:
+    print("Running with %s:" % algorithm_name)
 
-# step 3 - create an instance of Hartigan K-Means and run the actual clustering
-# n_init = the number of random initializations to perform
-# max_ter = the maximal number of iteration in each initialization
-# n_jobs = the maximal number of initializations to run in parallel
-clustering_start_t = time()
-n_init = 1 if speed_test_mode else 4
-hkmeans = HKMeans(n_clusters=n_clusters, random_state=128, n_init=n_init,
-                  n_jobs=-1, max_iter=5, verbose=True, optimizer_type='B')
-hkmeans.fit(vectors)
-clustering_end_t = time()
+    # step 3 - cluster the data
+    print("\tClustering starts...", end=' ')
+    clustering_start_t = time()
+    algorithm = factory()
+    algorithm.fit(vectors)
+    clustering_end_t = time()
+    print("ended in %.3f secs." % (clustering_end_t - clustering_start_t))
 
-print("Clustering time: %.3f secs." % (clustering_end_t - clustering_start_t))
+    predictions_array = algorithm.labels_
 
-# step 4 - some evaluation
-homogeneity = metrics.homogeneity_score(gold_labels, hkmeans.labels_)
-completeness = metrics.completeness_score(gold_labels, hkmeans.labels_)
-v_measure = metrics.v_measure_score(gold_labels, hkmeans.labels_)
-ami = metrics.adjusted_mutual_info_score(gold_labels, hkmeans.labels_)
-ari = metrics.adjusted_rand_score(gold_labels, hkmeans.labels_)
-print("Homogeneity: %0.3f" % homogeneity)
-print("Completeness: %0.3f" % completeness)
-print("V-measure: %0.3f" % v_measure)
-print("Adjusted Mutual-Information: %.3f" % ami)
-print("Adjusted Rand-Index: %.3f" % ari)
+    # measure the clustering quality
+    homogeneity = metrics.homogeneity_score(gold_labels_array, predictions_array)
+    completeness = metrics.completeness_score(gold_labels_array, predictions_array)
+    v_measure = metrics.v_measure_score(gold_labels_array, predictions_array)
+    ami = metrics.adjusted_mutual_info_score(gold_labels_array, predictions_array)
+    ari = metrics.adjusted_rand_score(gold_labels_array, predictions_array)
+    print("\tClustering measures: AMI: %.3f, ARI: %.3f" % (ami, ari))
 
-# save a heatmap
-create_heatmap(gold_labels, hkmeans.labels_,
-               topics, 'Hartigan K-Means clustering heatmap',
-               os.path.join(output_path, 'hkmeans_heatmap'))
-
-# save a report
-with open(os.path.join(output_path, "hkmeans_report.txt"), "wt") as f:
-    f.write(str(hkmeans) + "\n")
-    f.write("Size: %d vectors\n" % vectors.shape[0])
-    f.write("Time: %.3f seconds\n" % (clustering_end_t - clustering_start_t))
-    f.write("Measures:\n")
-    f.write("\tHomogeneity: %0.3f\n" % homogeneity)
-    f.write("\tCompleteness: %0.3f\n" % completeness)
-    f.write("\tV-measure: %0.3f\n" % v_measure)
-    f.write("\tAdjusted Mutual Information: %.3f\n" % ami)
-    f.write("\tAdjusted Rand Index: %.3f\n" % ari)
-    f.write("\n\n")
+    save_report_and_heatmap(gold_labels_array, predictions_array, topics,
+                            algorithm, algorithm_name, output_path,
+                            ami, ari, homogeneity, completeness, v_measure,
+                            n_samples, vectorization_end_t-vectorization_start_t,
+                            clustering_end_t-clustering_start_t)

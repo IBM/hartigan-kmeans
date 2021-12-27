@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache2.0
 #
 
+import os
 import numpy as np
 from sklearn.metrics.cluster import contingency_matrix
 from sklearn.datasets import fetch_20newsgroups
@@ -64,3 +65,28 @@ def fetch_20ng(subset):
     topics = dataset.target_names
     n_samples = len(texts)
     return texts, gold_labels_array, n_clusters, topics, n_samples
+
+
+def save_report_and_heatmap(gold_labels_array, predictions_array, topics,
+                            algorithm, algorithm_name, output_path,
+                            ami, ari, homogeneity, completeness, v_measure,
+                            n_samples, vectorization_time, clustering_time):
+    # save a heatmap
+    create_heatmap(gold_labels_array, predictions_array,
+                   topics, algorithm_name + ' heatmap',
+                   os.path.join(output_path, algorithm_name + '_heatmap'))
+    with open(os.path.join(output_path, algorithm_name + "_report.txt"), "wt") as f:
+        f.write("Clustering:\n")
+        f.write(str(algorithm) + "\n")
+        f.write("Dataset size: %d texts\n" % n_samples)
+        f.write("Vectorization time: %.3f seconds\n" % vectorization_time)
+        f.write("Clustering time: %.3f seconds\n" % clustering_time)
+        f.write("Measures:\n")
+        f.write("\tHomogeneity: %0.3f\n" % homogeneity)
+        f.write("\tCompleteness: %0.3f\n" % completeness)
+        f.write("\tV-measure: %0.3f\n" % v_measure)
+        f.write("\tAdjusted Mutual Information: %.3f\n" % ami)
+        f.write("\tAdjusted Rand Index: %.3f\n" % ari)
+        f.write("\n\n")
+
+

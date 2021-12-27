@@ -108,5 +108,5 @@ If you have any questions or issues you can create a new [issue here][issues].
 - Slonim, Noam, Ehud Aharoni, and Koby Crammer. "Hartigan's K-Means Versus Lloyd's K-Means—Is It Time for a Change?." Twenty-Third International Joint Conference on Artificial Intelligence. 2013.
 
 
-[issues]: https://github.com/IBM/sib/issues/new
+[issues]: https://github.com/IBM/hartigan-kmeans/issues/new
 [sklearn]: https://scikit-learn.org

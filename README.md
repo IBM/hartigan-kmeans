@@ -61,10 +61,11 @@ print("Adjusted Mutual-Info: %.3f" % metrics.adjusted_mutual_info_score(gold_lab
 
 Expected result:
 ```
-Homogeneity: 
-Completeness:
-V-measure:
-Adjusted Rand-Index:
+Homogeneity: 0.245
+Completeness: 0.290
+V-measure: 0.266
+Adjusted Rand-Index: 0.099
+Adjusted Mutual-Info: 0.263
 ```
 
 See the [Examples](examples) directory for more illustrations and a comparison against Lloyd's K-Means.

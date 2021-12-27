@@ -42,11 +42,11 @@ setups = [
 ]
 
 # step 2 - represent the clustering data using bow of the 10k most frequent
-# unigrams in the dataset. Note that if you wish to apply some text pre-processing
-# like stop words filtering and stemming/lemmatization - that's the place to do that.
+# unigrams in the dataset, excluding stop words. Note that if you wish to
+# apply some text pre-processing like stemming - that's the place to do that.
 print("Vectorization starts...", end=' ')
 vectorization_start_t = time()
-vectorizer = TfidfVectorizer(max_features=10000)
+vectorizer = TfidfVectorizer(max_features=10000, stop_words='english')
 vectors = vectorizer.fit_transform(texts)
 vectorization_end_t = time()
 print("ended in %.3f secs." % (vectorization_end_t - vectorization_start_t))

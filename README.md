@@ -29,7 +29,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.datasets import fetch_20newsgroups
 from sklearn import metrics
-from hkmeans import HKmeans
+from hkmeans import HKMeans
 
 # read the dataset
 dataset = fetch_20newsgroups(subset='all', categories=None,
@@ -55,6 +55,8 @@ print("Homogeneity: %0.3f" % metrics.homogeneity_score(gold_labels, hkmeans.labe
 print("Completeness: %0.3f" % metrics.completeness_score(gold_labels, hkmeans.labels_))
 print("V-measure: %0.3f" % metrics.v_measure_score(gold_labels, hkmeans.labels_))
 print("Adjusted Rand-Index: %.3f" % metrics.adjusted_rand_score(gold_labels, hkmeans.labels_))
+print("Adjusted Mutual-Info: %.3f" % metrics.adjusted_mutual_info_score(gold_labels, hkmeans.labels_))
+
 ```
 
 Expected result:

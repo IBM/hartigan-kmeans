@@ -13,8 +13,6 @@ from joblib import Parallel, delayed, effective_n_jobs
 from hkmeans.hkmeans_optimizer_p import PHKMeansOptimizer
 from hkmeans.hkmeans_optimizer_c import CHKMeansOptimizer
 
-from time import time
-
 
 class HKMeans(BaseEstimator, ClusterMixin, TransformerMixin):
     """Hartigan K-Means clustering.
@@ -133,6 +131,9 @@ class HKMeans(BaseEstimator, ClusterMixin, TransformerMixin):
                              % (self.n_samples, self.n_clusters))
 
         random_state = check_random_state(self.random_state)
+
+        if x.dtype == np.float32:
+            x = x.astype(np.float64)
 
         self.x = x
         self.x_squared_norm = row_norms(x, squared=True)

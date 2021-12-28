@@ -121,6 +121,10 @@ class HKMeans(BaseEstimator, ClusterMixin, TransformerMixin):
         self
             Fitted estimator.
         """
+
+        if isinstance(x, (list, tuple)):
+            x = np.array(x)
+
         self.n_samples, self.n_features = x.shape
 
         if not self.n_samples > 1:
